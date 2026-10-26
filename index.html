@@ -525,36 +525,59 @@
 
         audio.volume = volumeSlider.value;
 
-        function tryPlayAudio() {
-            audio.play().then(() => {
-                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                // Убираем фоновые слушатели, если музыка успешно запустилась
-                ['click', 'touchstart', 'keydown'].forEach(evt => 
-                    document.removeEventListener(evt, unlockAudioOnInteraction)
-                );
-            }).catch(() => {
-                // Если браузер заблокировал автостарт со звуком, ждем любого первого действия
-                ['click', 'touchstart', 'keydown'].forEach(evt => 
-                    document.addEventListener(evt, unlockAudioOnInteraction, { once: true })
-                );
-            });
+        // Все возможные события: движение мыши, колесико, скролл, касания, клики и клавиши
+        const unlockEvents = [
+            'mousemove', 
+            'pointermove', 
+            'mouseover', 
+            'wheel', 
+            'scroll', 
+            'mousedown', 
+            'pointerdown', 
+            'touchstart', 
+            'touchmove', 
+            'keydown', 
+            'click'
+        ];
+
+        let isTryingToPlay = false;
+
+        function removeUnlockListeners() {
+            unlockEvents.forEach(evt => 
+                window.removeEventListener(evt, unlockAudioOnInteraction, { passive: true })
+            );
         }
 
         function unlockAudioOnInteraction(e) {
-            // Не перехватываем клик, если пользователь сам нажал прямо на кнопку Play
-            if (playBtn.contains(e.target)) return;
-            if (audio.paused) {
-                audio.play().catch(() => {});
-            }
+            // Если пользователь кликнул прямо по кнопке Play/Pause, не мешаем стандартному обработчику
+            if (e && e.target && playBtn.contains(e.target)) return;
+            if (!audio.paused || isTryingToPlay) return;
+
+            isTryingToPlay = true;
+            audio.play().then(() => {
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                removeUnlockListeners(); // Убираем слушатели только когда музыка реально заиграла
+                isTryingToPlay = false;
+            }).catch(() => {
+                // Если браузер не принял движение мыши за достаточный триггер, 
+                // сбрасываем флаг и продолжаем ловить следующие движения/клики
+                isTryingToPlay = false;
+            });
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Небольшая задержка в 50мс нужна, чтобы браузер плавно отрисовал CSS-анимацию появления
+            // Плавная отрисовка карточки при входе
             setTimeout(() => {
                 mainContainer.classList.add('visible');
             }, 50);
 
-            tryPlayAudio();
+            // Вешаем слушатели на движение мышки и остальные действия
+            unlockEvents.forEach(evt => 
+                window.addEventListener(evt, unlockAudioOnInteraction, { passive: true })
+            );
+
+            // И сразу пробуем запустить при загрузке
+            unlockAudioOnInteraction();
         });
 
         // --- 3. ПЛЕЕР ---
@@ -620,11 +643,15 @@
         });
 
         playBtn.addEventListener('click', () => {
+            removeUnlockListeners(); // Отключаем автозапуск от мышки, если юзер сам управляет плеером
             if (audio.paused) audio.play();
             else audio.pause();
         });
 
-        audio.addEventListener('play', () => playBtn.innerHTML = '<i class="fas fa-pause"></i>');
+        audio.addEventListener('play', () => {
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            removeUnlockListeners();
+        });
         audio.addEventListener('pause', () => playBtn.innerHTML = '<i class="fas fa-play"></i>');
         audio.addEventListener('ended', () => {
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
