@@ -57,7 +57,7 @@
             pointer-events: none;
         }
 
-        a, button, input[type="range"], .enter-screen {
+        a, button, input[type="range"] {
             cursor: pointer;
         }
 
@@ -69,91 +69,6 @@
             height: 100%;
             z-index: 1; 
             pointer-events: none;
-        }
-
-        /* --- ЭКРАН ВХОДА --- */
-        .enter-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-            background: rgba(4, 4, 7, 0.4);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            transition: opacity 0.8s var(--ease-liquid), visibility 0.8s ease;
-            user-select: none;
-        }
-
-        .enter-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .enter-trigger {
-            display: inline-flex;
-            align-items: center;
-            gap: 20px;
-            padding: 16px 44px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 999px;
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.6),
-                inset 0 1px 2px rgba(255, 255, 255, 0.5),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            animation: pulseGlass 3.2s infinite ease-in-out;
-            transition: transform 0.6s var(--ease-liquid), opacity 0.6s var(--ease-liquid);
-        }
-
-        .enter-screen.hidden .enter-trigger {
-            transform: scale(1.15);
-            opacity: 0;
-        }
-
-        .enter-trigger:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%);
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 
-                0 35px 70px rgba(0, 0, 0, 0.7),
-                0 0 35px rgba(255, 255, 255, 0.2),
-                inset 0 1.5px 3px rgba(255, 255, 255, 0.7);
-        }
-
-        .gothic-btn {
-            font-family: 'MedievalSharp', cursive;
-            font-size: 3.4rem;
-            color: var(--text-main);
-            letter-spacing: 4px;
-            text-transform: lowercase;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-            line-height: 1;
-        }
-
-        .side-cross {
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.65);
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
-            transition: transform 0.4s ease, color 0.4s ease;
-        }
-
-        .enter-trigger:hover .side-cross {
-            color: #ffffff;
-            transform: scale(1.2);
-            text-shadow: 0 0 18px rgba(255, 255, 255, 0.9);
-        }
-
-        @keyframes pulseGlass {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
         }
 
         /* --- ОСНОВНАЯ КАРТОЧКА --- */
@@ -203,26 +118,26 @@
         .container.visible .corner-cross {
             opacity: 0.3;
             transform: translateY(0);
-            transition-delay: 0.2s;
+            transition-delay: 0.1s;
         }
 
         .container.visible .title-wrapper {
             opacity: 1;
             transform: translateY(0);
-            transition-delay: 0.25s;
+            transition-delay: 0.15s;
         }
 
         /* Поочередное всплытие кнопок */
-        .container.visible .link-item:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.35s; }
-        .container.visible .link-item:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.42s; }
-        .container.visible .link-item:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.49s; }
-        .container.visible .link-item:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.56s; }
-        .container.visible .link-item:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.63s; }
+        .container.visible .link-item:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.25s; }
+        .container.visible .link-item:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.32s; }
+        .container.visible .link-item:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.39s; }
+        .container.visible .link-item:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.46s; }
+        .container.visible .link-item:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.53s; }
 
         .container.visible .music-box {
             opacity: 1;
             transform: translateY(0);
-            transition-delay: 0.72s;
+            transition-delay: 0.62s;
         }
 
         /* Угловые готические кресты */
@@ -505,23 +420,12 @@
             h1 { font-size: 2.8rem; }
             .links-grid { grid-template-columns: 1fr; }
             .link-item.featured { grid-column: span 1; }
-            .gothic-btn { font-size: 2.8rem; }
-            .enter-trigger { padding: 12px 28px; gap: 14px; }
         }
     </style>
 </head>
 <body>
 
     <canvas id="ashCanvas"></canvas>
-
-    <!-- Экран входа -->
-    <div class="enter-screen" id="enterScreen">
-        <div class="enter-trigger">
-            <span class="side-cross">✠</span>
-            <div class="gothic-btn">тык</div>
-            <span class="side-cross">✠</span>
-        </div>
-    </div>
 
     <!-- Основная карточка профиля -->
     <div class="container" id="mainContainer">
@@ -578,7 +482,7 @@
                     </div>
                 </div>
 
-                <audio id="audioElement" preload="metadata">
+                <audio id="audioElement" preload="auto" autoplay>
                     <source src="cannibalism.mp3" type="audio/mpeg">
                 </audio>
             </div>
@@ -613,31 +517,54 @@
         }
         typeTitle();
 
-        // --- 2. ПЕРЕХОД ПО КЛИКУ И ПУСК МУЗЫКИ ---
-        const enterScreen = document.getElementById('enterScreen');
+        // --- 2. АВТОМАТИЧЕСКОЕ ПОЯВЛЕНИЕ КАРТОЧКИ И ЗАПУСК МУЗЫКИ ---
         const mainContainer = document.getElementById('mainContainer');
         const audio = document.getElementById('audioElement');
         const playBtn = document.getElementById('playBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
 
-        enterScreen.addEventListener('click', () => {
-            enterScreen.classList.add('hidden');
-            mainContainer.classList.add('visible');
+        audio.volume = volumeSlider.value;
 
+        function tryPlayAudio() {
             audio.play().then(() => {
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            }).catch(e => console.log('Аудио ожидает взаимодействия:', e));
+                // Убираем фоновые слушатели, если музыка успешно запустилась
+                ['click', 'touchstart', 'keydown'].forEach(evt => 
+                    document.removeEventListener(evt, unlockAudioOnInteraction)
+                );
+            }).catch(() => {
+                // Если браузер заблокировал автостарт со звуком, ждем любого первого действия
+                ['click', 'touchstart', 'keydown'].forEach(evt => 
+                    document.addEventListener(evt, unlockAudioOnInteraction, { once: true })
+                );
+            });
+        }
+
+        function unlockAudioOnInteraction(e) {
+            // Не перехватываем клик, если пользователь сам нажал прямо на кнопку Play
+            if (playBtn.contains(e.target)) return;
+            if (audio.paused) {
+                audio.play().catch(() => {});
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Небольшая задержка в 50мс нужна, чтобы браузер плавно отрисовал CSS-анимацию появления
+            setTimeout(() => {
+                mainContainer.classList.add('visible');
+            }, 50);
+
+            tryPlayAudio();
         });
 
         // --- 3. ПЛЕЕР ---
         const progressSlider = document.getElementById('progressSlider');
-        const volumeSlider = document.getElementById('volumeSlider');
         const volumeIcon = document.getElementById('volumeIcon');
         const currentTimeEl = document.getElementById('currentTime');
         const durationTimeEl = document.getElementById('durationTime');
 
         let isDragging = false;
         let prevVolume = 0.5;
-        audio.volume = volumeSlider.value;
 
         function formatTime(sec) {
             if (isNaN(sec) || sec < 0) return "00:00";
